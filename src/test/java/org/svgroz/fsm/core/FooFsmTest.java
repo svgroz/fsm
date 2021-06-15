@@ -29,7 +29,10 @@ public class FooFsmTest {
     @Test
     public void test1() {
         var foo = new Foo();
-        var fooFsm = new FooFsm();
+        var fooFsm = FSMBuilder.<Foo>create()
+                .addTransition(FooFsmTest.F.class, (action, target) -> target)
+                .addTransition(FooFsmTest.S.class, (action, target) -> target)
+                .build();
         fooFsm.transit(new F(), foo);
         fooFsm.transit(new S(), foo);
     }
