@@ -1,19 +1,32 @@
 package org.svgroz.fsm.core;
 
 import java.util.Map;
-import java.util.function.BiFunction;
 
 public class SimpleFSM<T> implements FSM<T> {
-    private final Map<Class<?>, BiFunction<?, T, T>> ctx;
+    private final Map<Class<?>, Transition<?, T>> ctx;
 
-    public SimpleFSM(final Map<Class<?>, BiFunction<?, T, T>> ctx) {
+    public SimpleFSM(final Map<Class<?>, Transition<?, T>> ctx) {
         this.ctx = Map.copyOf(ctx);
     }
 
     @Override
     public <C, A extends Action<C>> T transit(A action, T target) {
         @SuppressWarnings("unchecked")
-        BiFunction<C, T, T> transition = (BiFunction<C, T, T>) ctx.get(action.getClass());
-        return transition.apply(action.payload(), target);
+        var transition = (Transition<C, T>) ctx.get(action.getClass());
+        for (var predicate : transition.getPredicates()) {
+            if (predicate.test(action.getPayload(), target)) {
+                throw new TargetNotPassedPredicate(action, target, predicate);
+            }
+        }
+
+        for (var processor : transition.getProcessors()) {
+            target = processor.apply(action.getPayload(), target);
+        }
+
+        for (var postprocessor : transition.getPostprocessors()) {
+            postprocessor.accept(target);
+        }
+
+        return target;
     }
 }

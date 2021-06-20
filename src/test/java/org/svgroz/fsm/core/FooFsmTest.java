@@ -14,7 +14,7 @@ public class FooFsmTest {
         private final String payload = "SSSS";
 
         @Override
-        public String payload() {
+        public String getPayload() {
             return payload;
         }
 

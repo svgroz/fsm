@@ -19,6 +19,6 @@ public class FooFsm implements FSM<Foo> {
     @Override
     public <C, A extends Action<C>> Foo transit(A action, Foo target) {
         BiFunction<C, Foo, Foo> transition = (BiFunction<C, Foo, Foo>) ctx.get(action.getClass());
-        return transition.apply(action.payload(), target);
+        return transition.apply(action.getPayload(), target);
     }
 }
