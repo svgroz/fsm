@@ -25,4 +25,18 @@ public final class FooActions {
             return 2;
         }
     }
+
+    public static class Fourth implements Action<Boolean> {
+        @Override
+        public Boolean getPayload() {
+            return false;
+        }
+    }
+
+    public static class Fifth implements Action<Boolean> {
+        @Override
+        public Boolean getPayload() {
+            return false;
+        }
+    }
 }

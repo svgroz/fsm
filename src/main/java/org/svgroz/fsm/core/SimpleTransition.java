@@ -1,5 +1,6 @@
 package org.svgroz.fsm.core;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.function.BiFunction;
@@ -19,9 +20,9 @@ public class SimpleTransition<C, T> implements Transition<C, T> {
             final List<BiFunction<C, T, T>> processors,
             final List<Consumer<T>> postprocessors
     ) {
-        this.predicates = predicates;
-        this.processors = processors;
-        this.postprocessors = postprocessors;
+        this.predicates = predicates == null || predicates.isEmpty() ? Collections.emptyList() : List.copyOf(predicates);
+        this.processors = processors == null || processors.isEmpty() ? Collections.emptyList() : List.copyOf(processors);
+        this.postprocessors = postprocessors == null || postprocessors.isEmpty() ? Collections.emptyList() : List.copyOf(postprocessors);
     }
 
     @Override
