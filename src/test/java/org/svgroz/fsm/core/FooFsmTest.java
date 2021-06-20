@@ -1,39 +1,48 @@
 package org.svgroz.fsm.core;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class FooFsmTest {
-    public static class F implements Action<Void> {
-        @Override
-        public String toString() {
-            return "F{}";
-        }
-    }
-
-    public static class S implements Action<String> {
-        private final String payload = "SSSS";
-
-        @Override
-        public String getPayload() {
-            return payload;
-        }
-
-        @Override
-        public String toString() {
-            return "S{" +
-                    "payload='" + payload + '\'' +
-                    '}';
-        }
-    }
-
     @Test
-    public void test1() {
+    public void basicTransitionsTest() {
         var foo = new Foo();
+
         var fooFsm = FSMBuilder.<Foo>create()
-                .addTransition(FooFsmTest.F.class, (action, target) -> target)
-                .addTransition(FooFsmTest.S.class, (action, target) -> target)
+                .addTransition(
+                        FooActions.First.class,
+                        (action, target) -> {
+                            target.setValue(0);
+                            return target;
+                        }
+                )
+                .addTransition(
+                        FooActions.Second.class,
+                        (c, t) -> c.equalsIgnoreCase("ssss"),
+                        (action, target) -> {
+                            target.setValue(target.getValue() + 1);
+                            return target;
+                        }
+                )
+                .addTransition(
+                        FooActions.Third.class,
+                        List.of((c, t) -> c != 2),
+                        (action, target) -> {
+                            target.setValue(target.getValue() + 1);
+                            return target;
+                        }
+                )
                 .build();
-        fooFsm.transit(new F(), foo);
-        fooFsm.transit(new S(), foo);
+
+        foo = fooFsm.transit(new FooActions.First(), foo);
+        Assertions.assertEquals(0, foo.getValue());
+
+        fooFsm.transit(new FooActions.Second(), foo);
+        Assertions.assertEquals(1, foo.getValue());
+
+        fooFsm.transit(new FooActions.Third(), foo);
+        Assertions.assertEquals(2, foo.getValue());
     }
 }

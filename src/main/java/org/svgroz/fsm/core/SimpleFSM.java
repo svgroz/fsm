@@ -15,7 +15,7 @@ public class SimpleFSM<T> implements FSM<T> {
         var transition = (Transition<C, T>) ctx.get(action.getClass());
         for (var predicate : transition.getPredicates()) {
             if (predicate.test(action.getPayload(), target)) {
-                throw new TargetNotPassedPredicate(action, target, predicate);
+                throw new TargetNotPassedPredicateException(action, target, predicate);
             }
         }
 

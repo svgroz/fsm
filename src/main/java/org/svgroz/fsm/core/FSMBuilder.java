@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class FSMBuilder<T> {
     private final Map<Class<?>, Transition<?, T>> ctx = new HashMap<>();
@@ -22,6 +21,14 @@ public class FSMBuilder<T> {
 
     public <C, A extends Action<C>> FSMBuilder<T> addTransition(
             Class<? extends A> action,
+            BiPredicate<C, T> predicate,
+            BiFunction<C, T, T> processor
+    ) {
+        return addTransition(action, List.of(predicate), processor);
+    }
+
+    public <C, A extends Action<C>> FSMBuilder<T> addTransition(
+            Class<? extends A> action,
             List<BiPredicate<C, T>> predicates,
             BiFunction<C, T, T> processor
     ) {
@@ -30,7 +37,7 @@ public class FSMBuilder<T> {
         if (previousTransition == null) {
             return this;
         } else {
-            throw new ActionAlreadyRegistered(action, previousTransition, newTransition);
+            throw new ActionAlreadyRegisteredException(action, previousTransition, newTransition);
         }
     }
 
@@ -43,7 +50,7 @@ public class FSMBuilder<T> {
         if (previousTransition == null) {
             return this;
         } else {
-            throw new ActionAlreadyRegistered(action, previousTransition, newTransition);
+            throw new ActionAlreadyRegisteredException(action, previousTransition, newTransition);
         }
     }
 
@@ -58,7 +65,7 @@ public class FSMBuilder<T> {
         if (previousTransition == null) {
             return this;
         } else {
-            throw new ActionAlreadyRegistered(action, previousTransition, newTransition);
+            throw new ActionAlreadyRegisteredException(action, previousTransition, newTransition);
         }
     }
 
