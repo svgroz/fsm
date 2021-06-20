@@ -3,6 +3,9 @@ package org.svgroz.fsm.core;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+/**
+ * @author Simon Grozovsky svgroz@outlook.com
+ */
 public class Foo {
     private Integer value;
 

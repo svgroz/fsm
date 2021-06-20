@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+/**
+ * @author Simon Grozovsky svgroz@outlook.com
+ */
 public class FooFsmTest {
     @Test
     public void basicTransitionsTest() {

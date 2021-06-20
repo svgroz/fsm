@@ -9,6 +9,9 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
+/**
+ * @author Simon Grozovsky svgroz@outlook.com
+ */
 public class FSMBuilder<T> {
     private final Map<Class<?>, Transition<?, T>> ctx = new HashMap<>();
 
