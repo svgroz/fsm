@@ -3,22 +3,19 @@ package org.svgroz.fsm.core;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
 /**
  * @author Simon Grozovsky svgroz@outlook.com
  */
 public class SimpleTransition<C, T> implements Transition<C, T> {
-    private final List<BiPredicate<C, T>> predicates;
-    private final List<BiFunction<C, T, T>> processors;
-    private final List<Consumer<T>> postprocessors;
+    private final List<FSMPredicate<C, T>> predicates;
+    private final List<FSMProcessor<C, T>> processors;
+    private final List<FSMPostProcessor<T>> postprocessors;
 
     public SimpleTransition(
-            final List<BiPredicate<C, T>> predicates,
-            final List<BiFunction<C, T, T>> processors,
-            final List<Consumer<T>> postprocessors
+            final List<FSMPredicate<C, T>> predicates,
+            final List<FSMProcessor<C, T>> processors,
+            final List<FSMPostProcessor<T>> postprocessors
     ) {
         this.predicates = predicates == null || predicates.isEmpty() ? Collections.emptyList() : List.copyOf(predicates);
         this.processors = processors == null || processors.isEmpty() ? Collections.emptyList() : List.copyOf(processors);
@@ -26,17 +23,17 @@ public class SimpleTransition<C, T> implements Transition<C, T> {
     }
 
     @Override
-    public List<BiPredicate<C, T>> getPredicates() {
+    public List<FSMPredicate<C, T>> getPredicates() {
         return predicates;
     }
 
     @Override
-    public List<BiFunction<C, T, T>> getProcessors() {
+    public List<FSMProcessor<C, T>> getProcessors() {
         return processors;
     }
 
     @Override
-    public List<Consumer<T>> getPostprocessors() {
+    public List<FSMPostProcessor<T>> getPostprocessors() {
         return postprocessors;
     }
 

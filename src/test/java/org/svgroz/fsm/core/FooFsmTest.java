@@ -23,7 +23,7 @@ public class FooFsmTest {
                 )
                 .addTransition(
                         FooActions.Second.class,
-                        (c, t) -> c.equalsIgnoreCase("ssss"),
+                        (c, t) -> c.equalsIgnoreCase(FooActions.Second.class.getSimpleName()),
                         (action, target) -> {
                             target.setValue(target.getValue() + 1);
                             return target;
@@ -31,7 +31,7 @@ public class FooFsmTest {
                 )
                 .addTransition(
                         FooActions.Third.class,
-                        List.of((c, t) -> c != 2),
+                        List.of((c, t) -> c == 2),
                         (action, target) -> {
                             target.setValue(target.getValue() + 1);
                             return target;

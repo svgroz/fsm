@@ -17,17 +17,17 @@ public class SimpleFSM<T> implements FSM<T> {
         @SuppressWarnings("unchecked")
         var transition = (Transition<C, T>) ctx.get(action.getClass());
         for (var predicate : transition.getPredicates()) {
-            if (predicate.test(action.getPayload(), target)) {
+            if (predicate.isInvalid(action.getPayload(), target)) {
                 throw new TargetNotPassedPredicateException(action, target, predicate);
             }
         }
 
         for (var processor : transition.getProcessors()) {
-            target = processor.apply(action.getPayload(), target);
+            target = processor.process(action.getPayload(), target);
         }
 
         for (var postprocessor : transition.getPostprocessors()) {
-            postprocessor.accept(target);
+            postprocessor.postProcess(target);
         }
 
         return target;

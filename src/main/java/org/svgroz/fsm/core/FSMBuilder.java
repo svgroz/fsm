@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
 /**
  * @author Simon Grozovsky svgroz@outlook.com
@@ -25,49 +22,49 @@ public class FSMBuilder<T> {
 
     public <C, A extends Action<C>> FSMBuilder<T> addTransition(
             Class<? extends A> action,
-            BiPredicate<C, T> predicate,
-            BiFunction<C, T, T> processor
+            FSMPredicate<C, T> predicate,
+            FSMProcessor<C, T> processor
     ) {
         return addTransition(action, List.of(predicate), Collections.singletonList(processor), Collections.emptyList());
     }
 
     public <C, A extends Action<C>> FSMBuilder<T> addTransition(
             Class<? extends A> action,
-            List<BiPredicate<C, T>> predicates,
-            BiFunction<C, T, T> processor
+            List<FSMPredicate<C, T>> predicates,
+            FSMProcessor<C, T> processor
     ) {
         return addTransition(action, predicates, Collections.singletonList(processor), Collections.emptyList());
     }
 
     public <C, A extends Action<C>> FSMBuilder<T> addTransition(
             Class<? extends A> action,
-            BiFunction<C, T, T> processor
+            FSMProcessor<C, T> processor
     ) {
         return addTransition(action, Collections.emptyList(), Collections.singletonList(processor), Collections.emptyList());
     }
 
     public <C, A extends Action<C>> FSMBuilder<T> addTransition(
             Class<? extends A> action,
-            BiFunction<C, T, T> processor,
-            Consumer<T> postprocessor
+            FSMProcessor<C, T> processor,
+            FSMPostProcessor<T> postprocessor
     ) {
         return addTransition(action, Collections.emptyList(), Collections.singletonList(processor), Collections.singletonList(postprocessor));
     }
 
     public <C, A extends Action<C>> FSMBuilder<T> addTransition(
             Class<? extends A> action,
-            List<BiPredicate<C, T>> predicates,
-            BiFunction<C, T, T> processor,
-            List<Consumer<T>> postprocessors
+            List<FSMPredicate<C, T>> predicates,
+            FSMProcessor<C, T> processor,
+            List<FSMPostProcessor<T>> postprocessors
     ) {
         return addTransition(action, predicates, Collections.singletonList(processor), postprocessors);
     }
 
     public <C, A extends Action<C>> FSMBuilder<T> addTransition(
             Class<? extends A> action,
-            List<BiPredicate<C, T>> predicates,
-            List<BiFunction<C, T, T>> processors,
-            List<Consumer<T>> postprocessors
+            List<FSMPredicate<C, T>> predicates,
+            List<FSMProcessor<C, T>> processors,
+            List<FSMPostProcessor<T>> postprocessors
     ) {
         var newTransition = new SimpleTransition<>(predicates, processors, postprocessors);
         var previousTransition = ctx.put(action, newTransition);
